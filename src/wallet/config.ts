@@ -1,6 +1,6 @@
 import { getDefaultWallets } from '@rainbow-me/rainbowkit'
 import { configureChains, createClient } from 'wagmi'
-import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains'
+import { mainnet } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
@@ -11,7 +11,7 @@ if (!RPC_KEY) {
 }
 
 export const { chains, provider } = configureChains(
-    [mainnet, polygon, optimism, arbitrum],
+    [mainnet],
     [alchemyProvider({ apiKey: RPC_KEY }), publicProvider()]
 )
 
