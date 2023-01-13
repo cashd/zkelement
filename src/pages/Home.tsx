@@ -3,19 +3,12 @@ import { Signer } from 'ethers';
 import { createAztecAccount } from 'hooks/useAztecAccount';
 import { ReactElement } from 'react';
 import { useAccount, useProvider, useSigner } from 'wagmi';
-export { GrumpkinAddress } from '@aztec/sdk';
 
 export function Home(): ReactElement {
     const { data: signer } = useSigner();
     const provider = useProvider();
     const { address } = useAccount();
 
-    console.log(GrumpkinAddress);
-
-    // const sdk = useAztecSDK();
-    // const sdkAccount = useAztecAccount(address);
-
-    // console.log(sdkAccount);
     return (
         <div className="relative overflow-hidden bg-white">
             <div className="h-screen p-32">
