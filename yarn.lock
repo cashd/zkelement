@@ -35,26 +35,6 @@
     supports-color "7.2.0"
     tslib "^2.0.0"
 
-"@aztec/barretenberg@^2.1.75":
-  version "2.1.75"
-  resolved "https://registry.yarnpkg.com/@aztec/barretenberg/-/barretenberg-2.1.75.tgz#b1831a501885e86aea1fc6da2351213be52e3c2e"
-  integrity sha512-ZL00AdmpcbGm5kD0E1jTI5IxRcacUeWy5yaRbUCpsfndjL8vj01bF8fGCtv5BcC8KzfcLgwu8vBMKSG8YKllqg==
-  dependencies:
-    "@types/levelup" "^4.3.0"
-    browserify-cipher "^1.0.1"
-    cross-fetch "^3.1.5"
-    debug "^4.3.4"
-    detect-node "^2.1.0"
-    fs-extra "10.0.0"
-    hash.js "^1.1.7"
-    leveldown "^6.1.1"
-    levelup "^5.1.1"
-    memdown "^6.1.1"
-    promise-readable "^5.0.4"
-    sha3 "^2.1.3"
-    supports-color "7.2.0"
-    tslib "^2.0.0"
-
 "@aztec/blockchain@2.1.0-testnet.96":
   version "2.1.0-testnet.96"
   resolved "https://registry.yarnpkg.com/@aztec/blockchain/-/blockchain-2.1.0-testnet.96.tgz#89bbfd7dd2aed7f919b9712fec54bd874a24053b"

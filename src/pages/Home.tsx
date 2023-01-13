@@ -3,13 +3,14 @@ import { Signer } from 'ethers';
 import { createAztecAccount } from 'hooks/useAztecAccount';
 import { ReactElement } from 'react';
 import { useAccount, useProvider, useSigner } from 'wagmi';
-
-const AZTEC_PROOF_SERVER_URL = 'http://localhost:8081';
+export { GrumpkinAddress } from '@aztec/sdk';
 
 export function Home(): ReactElement {
     const { data: signer } = useSigner();
     const provider = useProvider();
     const { address } = useAccount();
+
+    console.log(GrumpkinAddress);
 
     // const sdk = useAztecSDK();
     // const sdkAccount = useAztecAccount(address);

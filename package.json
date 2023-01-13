@@ -23,7 +23,6 @@
         "format:check": "prettier --check '**/*.{js,jsx,ts,tsx,json,md}'"
     },
     "dependencies": {
-        "@aztec/barretenberg": "^2.1.75",
         "@aztec/sdk": "2.1.0-testnet.96",
         "@rainbow-me/rainbowkit": "^0.8.1",
         "@tanstack/react-query": "^4.22.0",
