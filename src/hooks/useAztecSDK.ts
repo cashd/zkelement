@@ -16,7 +16,8 @@ export function useAztecSDK() {
     const [SDK, setSDK] = useState<AztecSdk | undefined>();
 
     useEffect(() => {
-        if (!!signer) {
+        // require chain id to be correct
+        if (!!signer && !!provider) {
             // Convert the ethers provider into an Aztec compatible provider class
             const ethProvider = new EthersAdapter(provider);
 
@@ -27,11 +28,9 @@ export function useAztecSDK() {
                 debug: 'bb:*',
                 flavour: SdkFlavour.PLAIN,
                 minConfirmation: 1, // ETH block confirmations
-            }).then((newSDK) => {
-                newSDK.run().then(() => setSDK(newSDK));
-            });
+            }).then((newSDK) => newSDK.run().then(() => setSDK(newSDK)));
         }
-    }, [signer]);
+    }, [signer, provider]);
 
     return SDK;
 }
