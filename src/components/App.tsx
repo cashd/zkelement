@@ -1,6 +1,5 @@
 import { ConnectButton, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { ethers } from 'ethers'
-import { useProvider, WagmiConfig } from 'wagmi'
+import { WagmiConfig } from 'wagmi'
 import { chains, wagmiClient } from 'wallet/config'
 
 // async function useBlockNumber(provider: ethers.providers.Provider) {
@@ -10,19 +9,19 @@ import { chains, wagmiClient } from 'wallet/config'
 // }
 
 const App = () => {
-  // const block = useBlockNumber(provider)
+    // const block = useBlockNumber(provider)
 
-  return (
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
-        <div className="relative overflow-hidden bg-white">
-          <div className="h-screen p-32">
-            <ConnectButton />
-          </div>
-        </div>
-      </RainbowKitProvider>
-    </WagmiConfig>
-  )
+    return (
+        <WagmiConfig client={wagmiClient}>
+            <RainbowKitProvider chains={chains}>
+                <div className="relative overflow-hidden bg-white">
+                    <div className="h-screen p-32">
+                        <ConnectButton />
+                    </div>
+                </div>
+            </RainbowKitProvider>
+        </WagmiConfig>
+    )
 }
 
 export default App
