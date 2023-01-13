@@ -1,5 +1,5 @@
 import { getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { configureChains, createClient } from 'wagmi';
+import { configureChains } from 'wagmi';
 import { localhost, mainnet } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
@@ -10,18 +10,14 @@ if (!RPC_KEY) {
     throw new Error('Provide an RPC_KEY variable in .env');
 }
 
-export const { chains, provider } = configureChains(
+const { chains, provider } = configureChains(
     [mainnet, localhost],
     [alchemyProvider({ apiKey: RPC_KEY }), publicProvider()]
 );
 
-export const { connectors } = getDefaultWallets({
+const { connectors } = getDefaultWallets({
     appName: 'zkElement Finance',
     chains,
 });
 
-export const wagmiClient = createClient({
-    autoConnect: false,
-    connectors,
-    provider,
-});
+export { chains, provider, connectors };

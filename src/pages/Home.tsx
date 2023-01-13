@@ -1,4 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { Signer } from 'ethers';
 import { createAztecAccount } from 'hooks/useAztecAccount';
 import { ReactElement } from 'react';
 import { useAccount, useProvider, useSigner } from 'wagmi';
@@ -23,7 +24,7 @@ export function Home(): ReactElement {
                         if (!!address && !!provider) {
                             const r = await createAztecAccount(
                                 provider,
-                                signer,
+                                signer as Signer,
                                 address
                             );
 
