@@ -21,8 +21,11 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@rainbow-me/rainbowkit": "^0.8.1",
+    "ethers": "^5.7.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "wagmi": "^0.10.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
