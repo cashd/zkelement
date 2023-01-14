@@ -1,4 +1,9 @@
-import { createAztecSdk, EthersAdapter, SdkFlavour } from '@aztec/sdk';
+import {
+    createAztecSdk,
+    EthAddress,
+    EthersAdapter,
+    SdkFlavour,
+} from '@aztec/sdk';
 import { Provider, Signer } from '@wagmi/core';
 
 const AZTEC_PROOF_SERVER_URL = 'http://localhost:8081';
@@ -9,6 +14,7 @@ export const createAztecAccount = async (
     address: string
 ) => {
     const ethProvider = new EthersAdapter(provider);
+    const ethAddress = EthAddress.fromString(address);
 
     const sdk = await createAztecSdk(ethProvider, {
         serverUrl: AZTEC_PROOF_SERVER_URL,
@@ -22,8 +28,8 @@ export const createAztecAccount = async (
     await sdk.run();
     const { publicKey: accPubKey, privateKey: accPriKey } =
         await sdk.generateAccountKeyPair(
-            address,
-            new EthersAdapter(signer.provider)
+            ethAddress,
+            new EthersAdapter(signer.provider!)
         );
 
     // if (await sdk.isAccountRegistered(accPubKey)) {
@@ -42,8 +48,8 @@ export const createAztecAccount = async (
     // Generate user's spending key & signer
     // The spending keypair is used for receiving/spending funds on Aztec
     const { privateKey: spePriKey } = await sdk.generateSpendingKeyPair(
-        address,
-        new EthersAdapter(signer.provider)
+        ethAddress,
+        new EthersAdapter(signer.provider!)
     );
 
     console.log('spePriKey ', spePriKey);
@@ -54,7 +60,7 @@ export const createAztecAccount = async (
     console.log('Privacy Key:', accPriKey);
     console.log('Public Key:', accPubKey.toString());
 
-    return { accPubKey, accPriKey };
+    return { accPubKey, accPriKey, sdk };
 };
 
 // export function useAztecAccount(address?: string) {
