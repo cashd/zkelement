@@ -5,6 +5,10 @@ import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
+// @ RYAN I had to convert all config files to cjs if project is an esm module
+// https://github.com/sveltejs/vite-plugin-svelte/issues/141
+// I dont think this current setup will work with a prod build hmm
+
 // https://vitejs.dev/config/
 export default defineConfig({
     root: './',
