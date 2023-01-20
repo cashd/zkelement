@@ -4,8 +4,6 @@ import {
     GrumpkinAddress,
     TxSettlementTime,
 } from '@aztec/sdk';
-// @ RYAN THIS SHOWS ERROR BUT STILL WORKS IN DEV
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Signer } from '@wagmi/core';
 import { depositEthToAztec } from 'aztec/utils.js';
 import { ethers } from 'ethers';
@@ -23,9 +21,12 @@ async function depositEth(
         const depositTokenQuantity: bigint = ethers.utils
             .parseEther(amount)
             .toBigInt();
+
+        await sdk.awaitUserSynchronised(accountPublicKey);
+        //await sdk.awaitSynchronised();
         // @ RYAN IF YOU GET METAMASK ERROR WHEN TRYING OT BRIDGE CHANGE THIS HARDCODED ADDRESS TO CONNECTED
         let txId = await depositEthToAztec(
-            EthAddress.fromString('0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc'),
+            EthAddress.fromString('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'),
             accountPublicKey,
             depositTokenQuantity,
             TxSettlementTime.INSTANT,
@@ -48,10 +49,10 @@ export function Home(): ReactElement {
     const [SDK, setSDK] = useState<AztecSdk | null>(null);
 
     return (
-        <div className="relative overflow-hidden bg-white">
-            <div className="h-screen p-32">
-                <ConnectButton />
+        <div className=" bg-white">
+            <div className="h-screen">
                 <button
+                    className="border border-orange-400 border-solid bg-red-200 p-4"
                     onClick={async () => {
                         if (!!address && !!provider) {
                             const r = await createAztecAccount(

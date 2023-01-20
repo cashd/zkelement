@@ -1,4 +1,3 @@
-import '@rainbow-me/rainbowkit/styles.css';
 import App from 'components/App.js';
 import { createRoot } from 'react-dom/client';
 import 'tailwindcss/tailwind.css';
