@@ -5,7 +5,7 @@
     "private": true,
     "type": "module",
     "author": {
-        "name": "Cash DeLeon",
+        "name": "Cash Baller",
         "email": "0xashd@gmail.com",
         "url": "https://github.com/cashd"
     },
@@ -21,19 +21,17 @@
         "lint": "eslint src --max-warnings=0",
         "typecheck": "tsc --project tsconfig.json --noEmit",
         "format": "prettier --write '**/*.{js,jsx,ts,tsx,json,md,yaml,yml}'",
-        "format:check": "prettier --check '**/*.{js,jsx,ts,tsx,json,md}'"
+        "format:check": "prettier --check '**/*.{js,jsx,ts,tsx,json,md}'",
+        "devnet": "curl -s https://raw.githubusercontent.com/AztecProtocol/dev-rel/main/docker-compose.dev.yml | docker-compose -f - up --force-recreate"
     },
     "dependencies": {
         "@aztec/sdk": "2.1.0-testnet.96",
-        "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
-        "@rainbow-me/rainbowkit": "^0.8.1",
         "@tanstack/react-query": "^4.22.0",
-        "buffer": "^6.0.3",
-        "ethers": "^5.7.2",
+        "ethers": "5.7.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.6.2",
-        "wagmi": "^0.10.10"
+        "wagmi": "0.10.11"
     },
     "devDependencies": {
         "@babel/core": "^7.20.12",
