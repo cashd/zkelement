@@ -11,9 +11,10 @@
         "noEmit": true,
         "jsx": "react-jsx",
         "target": "ESNext",
-        "moduleResolution": "Node16",
+        "moduleResolution": "NodeNext",
         "isolatedModules": true,
-        "baseUrl": "./src"
+        "baseUrl": "./src",
+        "module": "ESNext"
     },
     "include": ["src"],
     "exclude": ["node_modules"]
