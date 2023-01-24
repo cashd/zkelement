@@ -4,12 +4,12 @@ import {
     GrumpkinAddress,
     TxSettlementTime,
 } from '@aztec/sdk';
-import { Signer } from '@wagmi/core';
+import { InjectedConnector, Signer } from '@wagmi/core';
+import { createAztecAccount } from 'aztec/createAztecAccount.js';
 import { depositEthToAztec } from 'aztec/utils.js';
 import { ethers } from 'ethers';
-import { createAztecAccount } from 'hooks/useAztecAccount.js';
-import { ReactElement, useState } from 'react';
-import { useAccount, useProvider, useSigner } from 'wagmi';
+import { ReactElement, useEffect, useState } from 'react';
+import { useAccount, useConnect, useProvider, useSigner } from 'wagmi';
 
 async function depositEth(
     amount: string,
@@ -40,6 +40,92 @@ async function depositEth(
     }
 }
 
+// import { useConnect } from 'wagmi'
+
+// export function Profile() {
+//   const { connect, connectors, error, isLoading, pendingConnector } =
+//     useConnect()
+
+//   return (
+//     <div>
+//       {connectors.map((connector) => (
+//         <button
+//           disabled={!connector.ready}
+//           key={connector.id}
+//           onClick={() => connect({ connector })}
+//         >
+//           {connector.name}
+//           {!connector.ready && ' (unsupported)'}
+//           {isLoading &&
+//             connector.id === pendingConnector?.id &&
+//             ' (connecting)'}
+//         </button>
+//       ))}
+
+//       {error && <div>{error.message}</div>}
+//     </div>
+//   )
+// }
+
+function ConnectWalletButton() {
+    const [connected, setConnected] = useState(false);
+
+    const { connect, status, reset } = useConnect({
+        connector: new InjectedConnector(),
+        onSuccess: () => {},
+    });
+
+    const provider = useProvider();
+    const { data: signer } = useSigner();
+
+    const { address, isConnected } = useAccount({
+        onConnect: async ({ address: _address }) => {
+            console.log('connected!');
+            setConnected(true);
+
+            // if (signer && _address) {
+            //     await createAztecAccount(provider, signer, _address);
+            // } else {
+            //     console.warn('no signer');
+            // }
+        },
+    });
+
+    useEffect(() => {
+        const connectSdk = async () => {
+            if (signer && address) {
+                await createAztecAccount(provider, signer, address);
+            } else {
+                console.warn('no signer or address');
+            }
+        };
+
+        connectSdk().then(() => {
+            console.log('ahhh');
+        });
+    }, [provider, signer, connected]);
+
+    if (isConnected) {
+        return (
+            <button
+                disabled
+                className="p-2 border rounded border-stone-900 max-w-fit"
+            >
+                Wallet connected at: {address}
+            </button>
+        );
+    }
+
+    return (
+        <button
+            className="p-2 border rounded border-stone-900 max-w-fit"
+            onClick={() => connect()}
+        >
+            Connect Wallet
+        </button>
+    );
+}
+
 export function Home(): ReactElement {
     const { data: signer } = useSigner();
     const provider = useProvider();
@@ -49,8 +135,12 @@ export function Home(): ReactElement {
     const [SDK, setSDK] = useState<AztecSdk | null>(null);
 
     return (
-        <div className=" bg-white">
-            <div className="h-screen">
+        <div className="h-screen bg-gray-300">
+            <div className="flex flex-col gap-y-6 max-w-lg m-auto pt-36">
+                <h1>zkElement</h1>
+                <ConnectWalletButton />
+            </div>
+            <div>
                 <button
                     className="border border-orange-400 border-solid bg-red-200 p-4"
                     onClick={async () => {
