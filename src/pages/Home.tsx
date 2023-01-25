@@ -23,10 +23,9 @@ async function depositEth(
             .toBigInt();
 
         await sdk.awaitUserSynchronised(accountPublicKey);
-        //await sdk.awaitSynchronised();
-        // @ RYAN IF YOU GET METAMASK ERROR WHEN TRYING OT BRIDGE CHANGE THIS HARDCODED ADDRESS TO CONNECTED
+
         let txId = await depositEthToAztec(
-            EthAddress.fromString('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'),
+            EthAddress.fromString(await signer.getAddress()),
             accountPublicKey,
             depositTokenQuantity,
             TxSettlementTime.INSTANT,
@@ -94,7 +93,7 @@ function ConnectWalletButton() {
     useEffect(() => {
         const connectSdk = async () => {
             if (signer && address) {
-                await createAztecAccount(provider, signer, address);
+                //await createAztecAccount(provider, signer, address);
             } else {
                 console.warn('no signer or address');
             }
@@ -109,7 +108,7 @@ function ConnectWalletButton() {
         return (
             <button
                 disabled
-                className="p-2 border rounded border-stone-900 max-w-fit"
+                className="p-2 font-bold text-white bg-black rounded btn max-w-fit"
             >
                 Wallet connected at: {address}
             </button>
@@ -118,7 +117,7 @@ function ConnectWalletButton() {
 
     return (
         <button
-            className="p-2 border rounded border-stone-900 max-w-fit"
+            className="p-2 font-bold text-white transition ease-in-out bg-black rounded delay-50 max-w-fit hover:scale-105 hover:shadow-lg"
             onClick={() => connect()}
         >
             Connect Wallet
@@ -135,14 +134,14 @@ export function Home(): ReactElement {
     const [SDK, setSDK] = useState<AztecSdk | null>(null);
 
     return (
-        <div className="h-screen bg-gray-300">
-            <div className="flex flex-col gap-y-6 max-w-lg m-auto pt-36">
-                <h1>zkElement</h1>
+        <div className="h-screen">
+            <div className="flex flex-col max-w-lg m-auto gap-y-6 pt-36">
+                <h1 className="text-4xl font-bold">zkElement</h1>
                 <ConnectWalletButton />
             </div>
             <div>
                 <button
-                    className="border border-orange-400 border-solid bg-red-200 p-4"
+                    className="p-4 bg-red-200 border border-orange-400 border-solid"
                     onClick={async () => {
                         if (!!address && !!provider) {
                             const r = await createAztecAccount(
