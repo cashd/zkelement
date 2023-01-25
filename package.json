@@ -1,6 +1,7 @@
 {
     "name": "zkelement-ui",
     "description": "zkElement Finance UI",
+    "license": "MIT",
     "version": "0.1.0",
     "private": true,
     "type": "module",
@@ -27,6 +28,7 @@
     "dependencies": {
         "@aztec/sdk": "2.1.0-testnet.96",
         "@tanstack/react-query": "^4.22.0",
+        "daisyui": "^2.47.0",
         "ethers": "5.7.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
