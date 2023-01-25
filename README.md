@@ -1,6 +1,6 @@
-# React Tailwindcss Boilerplate build with Vite
+# zkElement
 
-This is a [ReactJS](https://reactjs.org) + [Vite](https://vitejs.dev) boilerplate to be used with [Tailwindcss](https://tailwindcss.com).
+zero knowledge fixed rates
 
 ## What is inside?
 
@@ -19,52 +19,40 @@ This project uses many tools like:
 
 ### Install
 
-Create the project.
-
-```bash
-npx degit joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate my-app
-```
-
-Access the project directory.
-
-```bash
-cd my-app
-```
-
 Install dependencies.
 
 ```bash
-pnpm install
+yarn
 ```
 
 Serve with hot reload at <http://localhost:5173>.
 
 ```bash
-pnpm run dev
+yarn dev
 ```
 
 ### Lint
 
 ```bash
-pnpm run lint
-```
-
-### Typecheck
-
-```bash
-pnpm run typecheck
+yarn lint
 ```
 
 ### Build
 
 ```bash
-pnpm run build
+yarn build
 ```
 
 ### Test
 
 ```bash
-pnpm run test
+yarn test
+```
+
+### Start Aztec Devent
+
+```bash
+yarn devnet
 ```
 
 ## License
