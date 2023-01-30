@@ -1,17 +1,46 @@
 import {
-    AssetValue,
-    AztecSdk,
-    AztecSdkUser,
-    BridgeCallData,
-    EthAddress,
-    EthersAdapter,
-    GrumpkinAddress,
-    Signer,
-    TxId,
-    TxSettlementTime,
-} from '@aztec/sdk';
+  AssetValue,
+  AztecSdk,
+  AztecSdkUser,
+  BridgeCallData,
+  EthAddress,
+  EthersAdapter,
+  GrumpkinAddress,
+  Signer,
+  TxId,
+  TxSettlementTime,
+} from "@aztec/sdk";
 
-import { Signer as WagmiSigner } from '@wagmi/core';
+import { Signer as WagmiSigner } from "@wagmi/core";
+import { ethers } from "ethers";
+
+async function depositEth(
+  amount: string,
+  accountPublicKey: GrumpkinAddress,
+  sdk: AztecSdk,
+  signer: WagmiSigner
+) {
+  try {
+    const depositTokenQuantity: bigint = ethers.utils
+      .parseEther(amount)
+      .toBigInt();
+
+    await sdk.awaitUserSynchronised(accountPublicKey);
+
+    let txId = await depositEthToAztec(
+      EthAddress.fromString(await signer.getAddress()),
+      accountPublicKey,
+      depositTokenQuantity,
+      TxSettlementTime.INSTANT,
+      sdk,
+      signer
+    );
+
+    console.log("Deposit TXID:", txId.toString());
+  } catch (e) {
+    console.log(e); // e.g. depositTokenQuantity = 0
+  }
+}
 
 // @ RYAN CANT USE BUFFER BC NEEDS TO BE POLYFILLIED BUT NOTHING ONLINE WORKED SO FAR
 
@@ -63,133 +92,133 @@ import { Signer as WagmiSigner } from '@wagmi/core';
 // };
 
 export async function depositEthToAztec(
-    depositor: EthAddress,
-    recipient: GrumpkinAddress,
-    tokenQuantity: bigint,
-    settlementTime: TxSettlementTime,
-    sdk: AztecSdk,
-    signer: WagmiSigner
+  depositor: EthAddress,
+  recipient: GrumpkinAddress,
+  tokenQuantity: bigint,
+  settlementTime: TxSettlementTime,
+  sdk: AztecSdk,
+  signer: WagmiSigner
 ) {
-    const tokenAssetId = sdk.getAssetIdBySymbol('ETH');
+  const tokenAssetId = sdk.getAssetIdBySymbol("ETH");
 
-    console.log(tokenAssetId);
-    const tokenDepositFee = (await sdk.getDepositFees(tokenAssetId))[
-        settlementTime
-    ];
+  console.log(tokenAssetId);
+  const tokenDepositFee = (await sdk.getDepositFees(tokenAssetId))[
+    settlementTime
+  ];
 
-    console.log(tokenDepositFee);
-    const tokenAssetValue: AssetValue = {
-        assetId: tokenAssetId,
-        value: tokenQuantity,
-    };
-    const tokenDepositController = sdk.createDepositController(
-        depositor,
-        tokenAssetValue,
-        tokenDepositFee,
-        recipient,
-        true,
-        new EthersAdapter(signer.provider!)
-    );
-    await tokenDepositController.createProof();
-    await tokenDepositController.sign();
-    await tokenDepositController.getPendingFunds();
-    if ((await tokenDepositController.getPendingFunds()) < tokenQuantity) {
-        await tokenDepositController.depositFundsToContract();
-        await tokenDepositController.awaitDepositFundsToContract();
-    }
-    let txId = await tokenDepositController.send();
-    return txId;
+  console.log(tokenDepositFee);
+  const tokenAssetValue: AssetValue = {
+    assetId: tokenAssetId,
+    value: tokenQuantity,
+  };
+  const tokenDepositController = sdk.createDepositController(
+    depositor,
+    tokenAssetValue,
+    tokenDepositFee,
+    recipient,
+    true,
+    new EthersAdapter(signer.provider!)
+  );
+  await tokenDepositController.createProof();
+  await tokenDepositController.sign();
+  await tokenDepositController.getPendingFunds();
+  if ((await tokenDepositController.getPendingFunds()) < tokenQuantity) {
+    await tokenDepositController.depositFundsToContract();
+    await tokenDepositController.awaitDepositFundsToContract();
+  }
+  let txId = await tokenDepositController.send();
+  return txId;
 }
 
 export async function registerAccount(
-    userId: GrumpkinAddress,
-    alias: string,
-    accountPrivateKey: Buffer,
-    newSigner: GrumpkinAddress,
-    assetSymbol: string,
-    assetAmount: bigint,
-    settlementTime: TxSettlementTime,
-    depositor: EthAddress,
-    sdk: AztecSdk
+  userId: GrumpkinAddress,
+  alias: string,
+  accountPrivateKey: Buffer,
+  newSigner: GrumpkinAddress,
+  assetSymbol: string,
+  assetAmount: bigint,
+  settlementTime: TxSettlementTime,
+  depositor: EthAddress,
+  sdk: AztecSdk
 ): Promise<TxId> {
-    const assetId = sdk.getAssetIdBySymbol(assetSymbol);
-    const deposit = { assetId, value: assetAmount };
-    const txFee = (await sdk.getRegisterFees(assetId))[settlementTime];
+  const assetId = sdk.getAssetIdBySymbol(assetSymbol);
+  const deposit = { assetId, value: assetAmount };
+  const txFee = (await sdk.getRegisterFees(assetId))[settlementTime];
 
-    const controller = sdk.createRegisterController(
-        userId,
-        alias,
-        accountPrivateKey,
-        newSigner,
-        undefined, // Optional recovery key
-        deposit, // Optional, can be of zero value
-        txFee,
-        depositor
-        // Optional Ethereum Provider
-    );
+  const controller = sdk.createRegisterController(
+    userId,
+    alias,
+    accountPrivateKey,
+    newSigner,
+    undefined, // Optional recovery key
+    deposit, // Optional, can be of zero value
+    txFee,
+    depositor
+    // Optional Ethereum Provider
+  );
 
-    await controller.depositFundsToContract();
-    await controller.awaitDepositFundsToContract();
+  await controller.depositFundsToContract();
+  await controller.awaitDepositFundsToContract();
 
-    await controller.createProof();
-    await controller.sign();
-    let txId = await controller.send();
-    return txId;
+  await controller.createProof();
+  await controller.sign();
+  let txId = await controller.send();
+  return txId;
 }
 
 export async function aztecConnect(
-    user: AztecSdkUser,
-    userSigner: Signer,
-    bridgeId: number,
-    inputAssetAAmount: bigint,
-    inputAssetASymbol: string,
-    outputAssetASymbol: string,
-    inputAssetBSymbol: string | undefined,
-    outputAssetBSymbol: string | undefined,
-    auxData: number,
-    settlementTime: TxSettlementTime,
-    sdk: AztecSdk
+  user: AztecSdkUser,
+  userSigner: Signer,
+  bridgeId: number,
+  inputAssetAAmount: bigint,
+  inputAssetASymbol: string,
+  outputAssetASymbol: string,
+  inputAssetBSymbol: string | undefined,
+  outputAssetBSymbol: string | undefined,
+  auxData: number,
+  settlementTime: TxSettlementTime,
+  sdk: AztecSdk
 ): Promise<TxId> {
-    // Initiate bridge call data parameters
-    const inputAssetIdA = sdk.getAssetIdBySymbol(inputAssetASymbol);
-    const outputAssetIdA = sdk.getAssetIdBySymbol(outputAssetASymbol);
-    let inputAssetIdB: number | undefined;
-    let outputAssetIdB: number | undefined;
-    if (inputAssetBSymbol !== undefined) {
-        inputAssetIdB = sdk.getAssetIdBySymbol(inputAssetBSymbol);
-    } else {
-        inputAssetIdB = inputAssetBSymbol;
-    }
-    if (outputAssetBSymbol !== undefined) {
-        outputAssetIdB = sdk.getAssetIdBySymbol(outputAssetBSymbol);
-    } else {
-        outputAssetIdB = outputAssetBSymbol;
-    }
+  // Initiate bridge call data parameters
+  const inputAssetIdA = sdk.getAssetIdBySymbol(inputAssetASymbol);
+  const outputAssetIdA = sdk.getAssetIdBySymbol(outputAssetASymbol);
+  let inputAssetIdB: number | undefined;
+  let outputAssetIdB: number | undefined;
+  if (inputAssetBSymbol !== undefined) {
+    inputAssetIdB = sdk.getAssetIdBySymbol(inputAssetBSymbol);
+  } else {
+    inputAssetIdB = inputAssetBSymbol;
+  }
+  if (outputAssetBSymbol !== undefined) {
+    outputAssetIdB = sdk.getAssetIdBySymbol(outputAssetBSymbol);
+  } else {
+    outputAssetIdB = outputAssetBSymbol;
+  }
 
-    const bridgeCallData = new BridgeCallData(
-        bridgeId,
-        inputAssetIdA,
-        outputAssetIdA,
-        inputAssetIdB,
-        outputAssetIdB,
-        BigInt(auxData)
-    );
+  const bridgeCallData = new BridgeCallData(
+    bridgeId,
+    inputAssetIdA,
+    outputAssetIdA,
+    inputAssetIdB,
+    outputAssetIdB,
+    BigInt(auxData)
+  );
 
-    // Initiate controller parameters
-    const assetValue: AssetValue = {
-        assetId: inputAssetIdA,
-        value: inputAssetAAmount,
-    };
-    const fee = (await sdk.getDefiFees(bridgeCallData))[settlementTime];
+  // Initiate controller parameters
+  const assetValue: AssetValue = {
+    assetId: inputAssetIdA,
+    value: inputAssetAAmount,
+  };
+  const fee = (await sdk.getDefiFees(bridgeCallData))[settlementTime];
 
-    const controller = sdk.createDefiController(
-        user.id,
-        userSigner,
-        bridgeCallData,
-        assetValue,
-        fee
-    );
+  const controller = sdk.createDefiController(
+    user.id,
+    userSigner,
+    bridgeCallData,
+    assetValue,
+    fee
+  );
 
-    await controller.createProof();
-    return await controller.send();
+  await controller.createProof();
+  return await controller.send();
 }
