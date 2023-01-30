@@ -101,12 +101,12 @@ export async function depositEthToAztec(
 ) {
   const tokenAssetId = sdk.getAssetIdBySymbol("ETH");
 
-  console.log(tokenAssetId);
+  // console.log(tokenAssetId);
   const tokenDepositFee = (await sdk.getDepositFees(tokenAssetId))[
     settlementTime
   ];
 
-  console.log(tokenDepositFee);
+  // console.log(tokenDepositFee);
   const tokenAssetValue: AssetValue = {
     assetId: tokenAssetId,
     value: tokenQuantity,
