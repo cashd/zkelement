@@ -45,20 +45,20 @@ export const createAztecAccount = async (
     : await sdk.addUser(accPriKey);
 
   console.log(sdkUser);
-  // Generate user's spending key & signer
-  // The spending keypair is used for receiving/spending funds on Aztec
-  const { privateKey: spePriKey } = await sdk.generateSpendingKeyPair(
-    ethAddress,
-    new EthersAdapter(signer.provider!)
-  );
+  //   // Generate user's spending key & signer
+  //   // The spending keypair is used for receiving/spending funds on Aztec
+  //   const { privateKey: spePriKey } = await sdk.generateSpendingKeyPair(
+  //     ethAddress,
+  //     new EthersAdapter(signer.provider!)
+  //   );
 
-  console.log("spePriKey ", spePriKey);
+  //   console.log("spePriKey ", spePriKey);
 
-  const schSigner = await sdk.createSchnorrSigner(spePriKey);
-  console.log("Signer:", schSigner);
+  //   const schSigner = await sdk.createSchnorrSigner(spePriKey);
+  //   console.log("Signer:", schSigner);
 
-  console.log("Privacy Key:", accPriKey);
-  console.log("Public Key:", accPubKey.toString());
+  //   console.log("Privacy Key:", accPriKey);
+  //   console.log("Public Key:", accPubKey.toString());
 
-  return { accPubKey, accPriKey, sdk };
+  return { accPubKey, sdk };
 };

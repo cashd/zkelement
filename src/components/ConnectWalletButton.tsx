@@ -1,19 +1,20 @@
 import { InjectedConnector, Signer } from "@wagmi/core";
-import { useAztec } from "aztec/hooks/useAztec.js";
 import { useCreateAztec } from "aztec/hooks/useCreateAztec.js";
-import { useAccount, useConnect, useProvider, useSigner } from "wagmi";
+import { useAccount, useConnect, useSigner } from "wagmi";
 
-export function ConnectWalletButton() {
-  const { connect, status, reset } = useConnect({
+interface ConnectWalletButtonProps {
+  disabled?: boolean;
+}
+
+export function ConnectWalletButton({}: ConnectWalletButtonProps) {
+  const { connect } = useConnect({
     connector: new InjectedConnector(),
     onSuccess: () => {},
   });
 
-  const provider = useProvider();
   const { data: signer } = useSigner();
 
-  const { mutate: createAztecSDK, isLoading } = useCreateAztec();
-  const aztec = useAztec();
+  const { mutate: createAztecSDK } = useCreateAztec();
 
   const { address, isConnected } = useAccount({
     onConnect: async ({ connector }) => {
@@ -30,10 +31,7 @@ export function ConnectWalletButton() {
 
   if (isConnected) {
     return (
-      <button
-        disabled
-        className="btn max-w-fit rounded bg-black p-2 font-bold text-white"
-      >
+      <button className="btn  bg-black p-2 font-bold text-white">
         Wallet connected at: {address}
       </button>
     );
@@ -41,7 +39,7 @@ export function ConnectWalletButton() {
 
   return (
     <button
-      className="delay-50 max-w-fit rounded bg-black p-2 font-bold text-white transition ease-in-out hover:scale-105 hover:shadow-lg"
+      className="delay-50  bg-black p-2 font-bold text-white transition ease-in-out hover:scale-105 hover:shadow-lg"
       onClick={() => connect()}
     >
       Connect Wallet
