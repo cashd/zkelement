@@ -1,38 +1,38 @@
 import {
-    AztecSdk,
-    createAztecSdk,
-    EthersAdapter,
-    SdkFlavour,
-} from '@aztec/sdk';
-import { useEffect, useState } from 'react';
-import { useProvider, useSigner } from 'wagmi';
+  AztecSdk,
+  createAztecSdk,
+  EthersAdapter,
+  SdkFlavour,
+} from "@aztec/sdk";
+import { useEffect, useState } from "react";
+import { useProvider, useSigner } from "wagmi";
 
-const AZTEC_PROOF_SERVER_URL = 'http://localhost:8081';
+const AZTEC_PROOF_SERVER_URL = "http://localhost:8081";
 
 export function useAztecSDK() {
-    const { data: signer } = useSigner();
-    const provider = useProvider();
+  const { data: signer } = useSigner();
+  const provider = useProvider();
 
-    const [SDK, setSDK] = useState<AztecSdk | undefined>();
+  const [SDK, setSDK] = useState<AztecSdk | undefined>();
 
-    useEffect(() => {
-        // require chain id to be correct
-        if (!!signer && !!provider) {
-            // Convert the ethers provider into an Aztec compatible provider class
-            const ethProvider = new EthersAdapter(provider);
+  useEffect(() => {
+    // require chain id to be correct
+    if (!!signer && !!provider) {
+      // Convert the ethers provider into an Aztec compatible provider class
+      const ethProvider = new EthersAdapter(provider);
 
-            createAztecSdk(ethProvider, {
-                serverUrl: AZTEC_PROOF_SERVER_URL,
-                pollInterval: 1000,
-                memoryDb: true,
-                debug: 'bb:*',
-                flavour: SdkFlavour.PLAIN,
-                minConfirmation: 1, // ETH block confirmations
-            }).then((newSDK) => newSDK.run().then(() => setSDK(newSDK)));
-        }
-    }, [signer, provider]);
+      createAztecSdk(ethProvider, {
+        serverUrl: AZTEC_PROOF_SERVER_URL,
+        pollInterval: 1000,
+        memoryDb: true,
+        debug: "bb:*",
+        flavour: SdkFlavour.PLAIN,
+        minConfirmation: 1, // ETH block confirmations
+      }).then((newSDK) => newSDK.run().then(() => setSDK(newSDK)));
+    }
+  }, [signer, provider]);
 
-    return SDK;
+  return SDK;
 }
 
 //   const provider = new ethers.providers.Web3Provider(window.ethereum);
